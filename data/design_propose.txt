@@ -1,0 +1,18 @@
+BD d'ingrédients
+3 colonnes:
+- [str] Nom (unité)
+- [float] Qté
+- [int] Nb jours avant péremption
+
+ 
+
+BD de recettes
+5 colonnes
+- [str] Nom du plat
+- [int] Catégorie de plat / saveur (mexicain, français, etc.)
+- [tuple of int] Type de repas (0 déjeuner, 1 dîner, 2 souper)
+- [tuple of str] Nom des ingrédients nécéssaires
+- [tuple of float] Qté nécéssaire pour chaque ingrédients
+Info nutritionnelle maybe?
+ 
+Nos outputs pourraient être des listes de tuples (plat déjeuner, plat dîner, plat souper) pour que chaque élément représente une journée et que ce soit plus facile de gérer la péremption.
