@@ -1,0 +1,23 @@
+% Noms des plat
+noms_plats = ["muffins", "omelette"];
+
+% Catégorie de plat
+categories = ["continental", "continental"];
+
+% je sais pas si on peut faire des listes de tuples comme ça. Il va p-e falloir faire
+% un array 2d remplis de booléens. Ça va gosser pour lister les ingredients dans les 
+% recettes, faudrait une BD de qtés avec autant de lignes qu'il existe d'ingrédients... 
+% on s'en reparle
+
+% Type de plat (0 = déjeuner, 1 = dîner, 2 = souper)
+types = [(0,), (0,)];
+
+ingredients_necessaires = [
+("farine (g)", "sucre (g)", "oeufs (nb)", "lait (ml)", "sel (g)", "beurre (g)"), 
+("oeufs (nb)", "sel (g)", )
+];
+
+qtes_necessaires = [
+(56, 53, 1, 45, 1, 29),
+(2, 2)
+];
