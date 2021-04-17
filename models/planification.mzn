@@ -1,52 +1,39 @@
-include "CarreMagique.dzn";
-include "alldifferent.mzn";
+include "../data/data_recettes.dzn";
+include "../data/parametres.dzn";
 
-% Constantes
-int: n;
-int: n_carre = n * n;
-int: SOMME_MAGIQUE = n * (n * n + 1) div 2;
+int: nb_ingredients;
+int: nb_recettes;
+int: nb_moments;
+int: nb_categories;
+int: nb_jours;
+int: nb_repas = nb_jours * 3;
 
-% Ensembles
-set of int: colonnes = 1..n;
-set of int: lignes = 1..n;
-set of int: valeurs = 1..n_carre;
+% Recettes possibles
+set of int: ingredient = 1..nb_ingredients;
+set of int: recette = 1..nb_recettes;
+set of int: moment = 1..nb_moments;
+set of int: categorie = 1..nb_categories;
+set of int: repas = 1..nb_repas;
 
-% Variables
-array[lignes, colonnes] of var valeurs: x;
+array[recette, ingredient] of int: ingredients;
+array[recette, moment] of int: moments;
+array[recette] of int: categories;
+array[ingredient] of int: qtes_disponibles;
+array[ingredient] of int: peremptions;
 
-% Contraintes
-constraint all_different([x[i, j] | i in lignes, j in colonnes]) :: bounds;
-constraint forall(i in lignes)(sum([x[i, j] | j in colonnes]) = SOMME_MAGIQUE);
-constraint forall(j in colonnes)(sum([x[i, j] | i in lignes]) = SOMME_MAGIQUE);
-constraint sum([x[i, i] | i in lignes]) = SOMME_MAGIQUE;
-constraint sum([x[i, n - i + 1] | i in lignes]) = SOMME_MAGIQUE;
+% Préparation de la liste de sortie
+array[repas] of var 0..nb_recettes: horaire;
 
-% Bris de symmetries
+% On choisi des recettes correspondantes au moment de la journée
+constraint forall (i in repas) (moments[horaire[i], i mod 3 + 1] == 1 \/ horaire[i] == 0);
 
-% On peut prendre un carre magique et permuter les ranges i et n - i + 1
-% en meme temps que les colonnes i et n - i + 1 et obtenir un nouveau carre magique
-% satisfaisant toutes les contraintes. Par consequent, on peut
-% toujours obtenir une solution ou x[i, i] < x[n - i + 1, n - i + 1].
-% Si ce n'est pas le cas, on applique la permutation.
-constraint forall(i in 1..n div 2)(x[i, i] < x[n - i + 1, n - i + 1]);
+% On se limite à la quantité d'ingrédients disponible
+constraint forall(i in ingredient) (sum([if horaire[j] > 0 then ingredients[horaire[j], i] else 0 endif| j in repas]) <= qtes_disponibles[i]);
 
-% On peut choisir deux entiers 1 <= i < j < n/2. On permutte la rangee i avec j et
-% la rangee n - i + 1 avec n - j + 1 de meme que la colonne i avec j et n - i + 1 avec
-% n - j + 1. La solution obtenue est un carre magique valide. La consequence est
-% qu'on peut faire n'importe quelle permutation sur les floor(n/2) premiers elements
-% de la diagonale. On peut donc trier cette partie de la diagonale.
-constraint forall(i in 1..n div 2 - 1)(x[i, i] < x[i + 1, i + 1]);
+% On respecte les péremptions d'ingrédients
+constraint forall(i in ingredient, j in repas) (if horaire[j] > 0 then if ingredients[horaire[j], i] > 0 then j <= peremptions[i] else true endif else true endif);
 
-% La transposee d'un carre magique et un carre magique. On peut donc forcer le coin
-% superieur droit a etre plus grand (ou plus petit) que le coin inferieur gauche.
-constraint x[1, n] > x[n, 1];
-
-solve satisfy;
-
-% Vous pouvez aussi experimenter avec ces variantes de "solve satisfy".
-% solve :: int_search(x, first_fail, indomain_min, complete) satisfy;
-% solve :: restart_geometric(1.5, 100) satisfy;
-%solve :: int_search(x, first_fail, indomain_min, complete) :: restart_geometric(1.5, 100) satisfy;
-
-output ["n = ", show(n), "\n"];
-output [join(" ", [show(x[i, j]) | j in colonnes]) ++ "\n" | i in lignes];
+% On cherche à minimiser le nombre de 0
+var 0..nb_repas: nb_zeros;
+nb_zeros = sum([horaire[i] == 0| i in repas]);
+solve minimize nb_zeros;

@@ -1,23 +1,23 @@
-% Noms des plat
-noms_plats = ["muffins", "omelette"];
+% Noms des plat: ["muffins", "omelette"];
 
-% Catégorie de plat
-categories = ["continental", "continental"];
+nb_recettes = 2;
+nb_ingredients = 7;
+nb_moments = 3;
+nb_categories = 4;
 
-% je sais pas si on peut faire des listes de tuples comme ça. Il va p-e falloir faire
-% un array 2d remplis de booléens. Ça va gosser pour lister les ingredients dans les 
-% recettes, faudrait une BD de qtés avec autant de lignes qu'il existe d'ingrédients... 
-% on s'en reparle
+% noms_ingredients = ["farine (g)", "sucre (g)", "oeufs (nb)", "lait (ml)", "sel (g)", "beurre (g)", "crème (ml)"];
+ingredients = [|56, 53, 1, 45, 1, 29, 0,
+|0,  0,  2, 0,  2, 0,  0|];
 
-% Type de plat (0 = déjeuner, 1 = dîner, 2 = souper)
-types = [(0,), (0,)];
+% Moment de recette (déjeuner, dîner, souper)
+moments = [|1, 1, 0,
+|1, 0, 1|];
 
-ingredients_necessaires = [
-("farine (g)", "sucre (g)", "oeufs (nb)", "lait (ml)", "sel (g)", "beurre (g)"), 
-("oeufs (nb)", "sel (g)", )
-];
+% Catégorie de plat: [0: "continental", 1: "asiatique", 2: "italien", 3: "mexicain"];
+categories = [0, 0];
 
-qtes_necessaires = [
-(56, 53, 1, 45, 1, 29),
-(2, 2)
-];
+% Quantités pour chaque ingrédient exprimée en fonction de l'unité de mesure
+qtes_disponibles = [500, 500, 4, 2000, 500, 500, 400];
+
+% Nombre de jours avant la péremption d'un ingrédient
+peremptions = [2, 600, 10, 5, 1000, 60, 8];
