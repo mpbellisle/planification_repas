@@ -4,6 +4,8 @@ import re
 import pandas as pd
 import numpy as np
 
+from preprocessing.quantity_matching import return_dict_ing_qte
+
 MIN_INGREDIENTS_OCCURENCES = 10
 
 
@@ -69,5 +71,24 @@ def clean_dataset(data):
         ingredient_counter = return_ingredients_counter(data)
 
     data = data.reset_index(drop=True)
-
+    data["RecipeID"] = data["RecipeID"].astype(str)
     return data
+
+
+def get_merge_df(clean_recipes_filename, recipes_filename):
+    clean_recipes = pd.read_csv(clean_recipes_filename, sep=";")
+    clean_recipes = clean_dataset(clean_recipes)
+
+    recipes = open_weird_csv(recipes_filename)
+    recipes_to_merge = recipes.rename(columns={"Ingredients": "quantites"})
+
+    merge_df = clean_recipes.merge(recipes_to_merge[["RecipeID", "quantites"]], how="inner", on="RecipeID")
+    merge_df["quantites_list"] = merge_df["quantites"].apply(lambda row: row.lower().replace("'", "").split("**"))
+
+    merge_df["ingredients_quantites"] = merge_df[["quantites_list", "ingredients_list"]].apply(
+        lambda row: return_dict_ing_qte(row["quantites_list"], row["ingredients_list"]), axis=1)
+
+    merge_df = merge_df.loc[pd.notna(merge_df["ingredients_quantites"])]
+    merge_df = merge_df.reset_index(drop=True)
+
+    return merge_df
