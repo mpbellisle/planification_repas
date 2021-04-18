@@ -7,6 +7,7 @@ import numpy as np
 from preprocessing.quantity_matching import return_dict_ing_qte
 from preprocessing.constant import ING_TO_REMOVE
 
+
 MIN_INGREDIENTS_OCCURENCES = 10
 
 
