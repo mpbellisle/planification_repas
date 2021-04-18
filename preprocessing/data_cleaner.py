@@ -4,7 +4,7 @@ import re
 import pandas as pd
 import numpy as np
 
-from preprocessing.quantity_matching import return_dict_ing_qte
+from quantity_matching import return_dict_ing_qte
 
 MIN_INGREDIENTS_OCCURENCES = 10
 
