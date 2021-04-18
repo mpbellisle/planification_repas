@@ -37,6 +37,7 @@ def return_keep_index_regex(data):
     to_keep_index = []
     for i, row in data.iterrows():
         keep = not re.search(f"[0-9]|:|'|to taste|\(|{to_remove_ing_regex}", row["Ingredients"])
+        keep = keep and (not re.search("cake|bread|rolls", row["Recipe Name"], re.IGNORECASE))
         to_keep_index.append(keep)
     return to_keep_index
 
