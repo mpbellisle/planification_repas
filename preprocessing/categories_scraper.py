@@ -5,6 +5,7 @@ from urllib.request import urlopen, Request
 
 
 USER_AGENT = "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0"
+NATIONALITES = ("american", "mexican", "french", "canadian", "japanese", "chinese", "korean", "portuguese", "spanish", "polish")
 
 
 def trouver_categories(question, plat, categories, nb_pages=1, seuil_proportion=None):
@@ -36,8 +37,7 @@ def trouver_moment_sur_series(series):
 
 
 def trouver_nationalite_sur_series(series):
-    nationalites = ("american", "mexican", "french", "canadian", "japanese", "chinese", "korean", "portuguese", "spanish", "polish")
-    return trouver_categories_sur_series("what nationality is", series, nationalites, 1)
+    return trouver_categories_sur_series("what nationality is", series, NATIONALITES, 1)
 
 
 if __name__ == "__main__":
