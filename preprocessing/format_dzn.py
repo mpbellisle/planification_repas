@@ -82,7 +82,7 @@ def format_dzn(recipes):
     lines.append("% Noms des nationalites:")
     lines.append(f"% {noms_nationalites}")
     lines.append("")
-    lines = add_dzn_2darray_to_lines(lines, "nationalites", recipes["nationalites"])
+    lines = add_dzn_2darray_to_lines(lines, "nationalites", recipes["nationalites"].apply(lambda l: [int(e) for e in l]))
     lines.append("")
     lines = add_dzn_1darray_to_lines(lines, "preferences_nationalites", [0] * len(noms_nationalites))
     lines.append("")
