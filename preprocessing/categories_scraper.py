@@ -2,9 +2,9 @@ import pandas as pd
 from time import sleep
 from urllib.request import urlopen, Request
 
+from preprocessing.constant import NATIONALITES
 
 USER_AGENT = "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0"
-NATIONALITES = ("american", "mexican", "french", "canadian", "japanese", "chinese", "korean", "portuguese", "spanish", "polish")
 
 
 def trouver_categories(question, plat, categories, nb_pages=1, seuil_proportion=None):

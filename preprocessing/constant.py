@@ -1,5 +1,6 @@
 MEASURE_MAPPING = {"cup": 250, "tablespoon": 15, "teaspoon": 5, "pinch": 1}
 
+NATIONALITES = ("american", "mexican", "french", "canadian", "japanese", "chinese", "korean", "portuguese", "spanish", "polish")
 
 ING_TO_REMOVE = [
     "bake",

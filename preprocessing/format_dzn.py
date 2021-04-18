@@ -1,7 +1,6 @@
 import pandas as pd
 
-from preprocessing.categories_scraper import NATIONALITES
-from preprocessing.constant import ING_TO_REMOVE, BASE_ING_QTE_MAPPING, AVAILABLE_ING
+from preprocessing.constant import NATIONALITES, ING_TO_REMOVE, BASE_ING_QTE_MAPPING, AVAILABLE_ING
 
 nrows = 100
 processed_recipes_path = "data/recipes_out_sample.pkl"
