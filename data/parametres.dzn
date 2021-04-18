@@ -1,1 +1,2 @@
-nb_jours = 3;
+nb_jours = 4;
+nb_max_utilisation_recette = 1;

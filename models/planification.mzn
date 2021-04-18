@@ -1,11 +1,13 @@
-include "../data/data_recettes.dzn";
+include "../data/data_recettes_out_full.dzn";
 include "../data/parametres.dzn";
+include "alldifferent.mzn";
 
 int: nb_ingredients;
 int: nb_recettes;
 int: nb_moments;
 int: nb_nationalites;
 int: nb_jours;
+int: nb_max_utilisation_recette;
 int: nb_repas = nb_jours * 3;
 
 % Recettes possibles
@@ -20,13 +22,13 @@ array[recette, moment] of int: moments;
 array[recette, nationalite] of int: nationalites;
 array[ingredient] of int: qtes_disponibles;
 array[ingredient] of int: peremptions;
-array[nationalite] of int: preferences_nationalites;
+array[nationalite] of float: preferences_nationalites;
 
 % Préparation de la liste de sortie
 array[repas] of var 0..nb_recettes: horaire;
 
 % On choisi des recettes correspondantes au moment de la journée
-constraint forall (i in repas) (moments[horaire[i], i mod 3 + 1] == 1 \/ horaire[i] == 0);
+constraint forall (i in repas) (moments[horaire[i], (i-1) mod 3 + 1] == 1 \/ horaire[i] == 0);
 
 % On se limite à la quantité d'ingrédients disponible
 constraint forall(i in ingredient) (sum([if horaire[j] > 0 then ingredients[horaire[j], i] else 0 endif| j in repas]) <= qtes_disponibles[i]);
@@ -34,15 +36,22 @@ constraint forall(i in ingredient) (sum([if horaire[j] > 0 then ingredients[hora
 % On respecte les péremptions d'ingrédients
 constraint forall(i in ingredient, j in repas) (if horaire[j] > 0 then if ingredients[horaire[j], i] > 0 then j <= peremptions[i] else true endif else true endif);
 
+% Toutes les recettes sont différentes
+constraint forall(i in recette) (sum([horaire[j] == i |j in repas]) <= nb_max_utilisation_recette);
+
+% Planifier plus tôt que tard
+constraint forall(i in 1..nb_repas-3) ((horaire[i] == 0 /\ horaire[i+3] == 0) \/ horaire[i] != 0);
+
 % On cherche à minimiser le nombre de 0
 var 0..nb_repas: nb_zeros;
 nb_zeros = sum([horaire[i] == 0| i in repas]);
 
 % Et à maximiser les préférences de nationalités
 var float: respect_preferences_nationalites;
-respect_preferences_nationalites = sum([if nationalites[i, j] == 1 then preferences_nationalites[j] else 0 endif | i in repas, j in nationalite]);
+respect_preferences_nationalites = sum([if horaire[i] > 0 then if nationalites[horaire[i], j] == 1 then preferences_nationalites[j] else 0 endif else 0 endif | i in repas, j in nationalite]);
 
 var float: score;
 score = -nb_zeros + respect_preferences_nationalites;
 
 solve maximize score;
+
