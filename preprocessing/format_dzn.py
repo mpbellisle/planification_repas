@@ -2,7 +2,7 @@ import pandas as pd
 
 from preprocessing.constant import NATIONALITES, ING_TO_REMOVE, BASE_ING_QTE_MAPPING, AVAILABLE_ING
 
-nrows = 200
+nrows = None
 processed_recipes_path = "data/recipes_out_200.pkl"
 dzn_out_path = f"data/data_recettes_out_{nrows if nrows else 'full'}.dzn"
 
@@ -101,6 +101,6 @@ def write_lines(lines, out_path):
 
 
 if __name__ == "__main__":
-    recipes = pd.read_pickle(processed_recipes_path).sample(nrows).reset_index(drop=True)
+    recipes = pd.read_pickle(processed_recipes_path).head(nrows).reset_index(drop=True)
     lines = format_dzn(recipes)
     write_lines(lines, dzn_out_path)

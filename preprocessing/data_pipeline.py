@@ -8,7 +8,7 @@ nrows = 200
 out_path = f"data/recipes_out_{nrows if nrows else 'full'}.pkl"
 
 if __name__ == "__main__":
-    recipes = get_merge_df(clean_recipes_path, recipes_path).head(nrows)
+    recipes = get_merge_df(clean_recipes_path, recipes_path).sample(nrows)
     print("merged")
     recipes["nationalites"] = trouver_nationalite_sur_series(recipes["Recipe Name"])
     print(recipes["nationalites"])
