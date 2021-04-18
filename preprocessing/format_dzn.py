@@ -15,12 +15,14 @@ def format_ingredients(noms_ingredients, dict_ingredients):
     return list_out
 
 
-def qtes_disponibles(noms_ingredients):
-    qtes_disponibles_dict = {**BASE_ING_QTE_MAPPING, **AVAILABLE_ING}
+def qtes_et_peremptions(noms_ingredients):
+    values_dict = {**BASE_ING_QTE_MAPPING, **AVAILABLE_ING}
     qtes_disponibles_list = list()
+    peremptions_list = list()
     for nom in noms_ingredients:
-        qtes_disponibles_list.append(qtes_disponibles_dict.get(nom, 0))
-    return qtes_disponibles_list
+        qtes_disponibles_list.append(values_dict.get(nom, (0,0))[0])
+        peremptions_list.append(values_dict.get(nom, (0,0))[1])
+    return qtes_disponibles_list, peremptions_list
 
 
 def add_dzn_2darray_to_lines(lines, titre_array, list_series):
@@ -49,6 +51,7 @@ def format_dzn(recipes):
     # On considère toutes les recettes comme étant acceptables pour dîner
     moments_list_series = recipes["moments"].apply(lambda x: [int(x[0]), 1, int(x[1])])
     noms_nationalites = NATIONALITES
+    qtes_disponibles_list, peremptions_list = qtes_et_peremptions(noms_ingredients)
 
     lines.append(f"nb_recettes = {len(recipes)};")
     lines.append(f"nb_ingredients = {len(noms_ingredients)};")
@@ -62,9 +65,9 @@ def format_dzn(recipes):
     lines.append("")
     lines = add_dzn_2darray_to_lines(lines, "ingredients", ingredients_list_series)
     lines.append("")
-    lines = add_dzn_1darray_to_lines(lines, "qtes_disponibles", qtes_disponibles(noms_ingredients))
+    lines = add_dzn_1darray_to_lines(lines, "qtes_disponibles", qtes_disponibles_list)
     lines.append("")
-    lines = add_dzn_1darray_to_lines(lines, "peremptions", [0] * len(noms_ingredients))
+    lines = add_dzn_1darray_to_lines(lines, "peremptions", peremptions_list)
     lines.append("")
     lines.append("")
 
