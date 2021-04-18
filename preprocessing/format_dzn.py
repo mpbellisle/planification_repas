@@ -1,9 +1,10 @@
 import pandas as pd
-from categories_scraper import NATIONALITES
 
+from preprocessing.categories_scraper import NATIONALITES
+from preprocessing.constant import BASE_ING_QTE_MAPPING
 
-processed_recipes_path = "../data/recipes_out_sample.pkl"
-dzn_out_path = "../data/data_recettes_out.dzn"
+processed_recipes_path = "data/recipes_out_sample.pkl"
+dzn_out_path = "data/data_recettes_out10.dzn"
 
 
 def format_ingredients(noms_ingredients, dict_ingredients):
@@ -12,6 +13,7 @@ def format_ingredients(noms_ingredients, dict_ingredients):
         list_out.append(dict_ingredients.get(nom, 0))
     return list_out
 
+
 def add_dzn_2darray_to_lines(lines, titre_array, list_series):
     lines.append(f"{titre_array} = [|{str(list_series[0])[1:-1]},")
     for row in list_series[1:-1]:
@@ -19,9 +21,11 @@ def add_dzn_2darray_to_lines(lines, titre_array, list_series):
     lines.append(f"|{str(list_series[0])[1:-1]}|];")
     return lines
 
+
 def add_dzn_1darray_to_lines(lines, titre_array, list):
     lines.append(f"{titre_array} = [{str(list[1:-1])}];")
     return lines
+
 
 def format_dzn(recipes):
     lines = list()
@@ -75,7 +79,8 @@ def format_dzn(recipes):
     lines.append("")
 
     return lines
- 
+
+
 def write_lines(lines, out_path):
     fichier = open(out_path,"w")
     for i in range(len(lines)):
@@ -85,7 +90,6 @@ def write_lines(lines, out_path):
 
 
 if __name__ == "__main__":
-    recipes = pd.read_pickle(processed_recipes_path)
+    recipes = pd.read_pickle(processed_recipes_path).sample(10)
     lines = format_dzn(recipes)
     write_lines(lines, dzn_out_path)
-

@@ -1,5 +1,4 @@
 import pandas as pd
-import requests
 from time import sleep
 from urllib.request import urlopen, Request
 

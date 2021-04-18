@@ -1,5 +1,5 @@
-from data_cleaner import get_merge_df
-from categories_scraper import trouver_moment_sur_series, trouver_nationalite_sur_series
+from preprocessing.data_cleaner import get_merge_df
+from preprocessing.categories_scraper import trouver_moment_sur_series, trouver_nationalite_sur_series
 
 
 recipes_path = "../data/recipes.csv"

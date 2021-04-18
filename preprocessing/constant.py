@@ -29,3 +29,10 @@ BASE_ING_QTE_MAPPING = {
     "skewer": 10000,
     "sodium": 10000
 }
+
+
+AVAILABLE_ING = {
+    "chicken": 10,
+
+
+}
