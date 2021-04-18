@@ -32,7 +32,7 @@ def add_dzn_2darray_to_lines(lines, titre_array, list_series):
 
 
 def add_dzn_1darray_to_lines(lines, titre_array, list):
-    lines.append(f"{titre_array} = [{str(list[1:-1])}];")
+    lines.append(f"{titre_array} = [{str(list)[1:-1]}];")
     return lines
 
 
