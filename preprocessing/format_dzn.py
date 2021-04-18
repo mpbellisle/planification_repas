@@ -1,10 +1,11 @@
 import pandas as pd
 
 from preprocessing.categories_scraper import NATIONALITES
-from preprocessing.constant import BASE_ING_QTE_MAPPING
+from preprocessing.constant import ING_TO_REMOVE, BASE_ING_QTE_MAPPING, AVAILABLE_ING
 
+nrows = 100
 processed_recipes_path = "data/recipes_out_sample.pkl"
-dzn_out_path = "data/data_recettes_out10.dzn"
+dzn_out_path = f"data/data_recettes_out_{nrows if nrows else 'full'}.dzn"
 
 
 def format_ingredients(noms_ingredients, dict_ingredients):
@@ -14,11 +15,19 @@ def format_ingredients(noms_ingredients, dict_ingredients):
     return list_out
 
 
+def qtes_disponibles(noms_ingredients):
+    qtes_disponibles_dict = {**BASE_ING_QTE_MAPPING, **AVAILABLE_ING}
+    qtes_disponibles_list = list()
+    for nom in noms_ingredients:
+        qtes_disponibles_list.append(qtes_disponibles_dict.get(nom, 0))
+    return qtes_disponibles_list
+
+
 def add_dzn_2darray_to_lines(lines, titre_array, list_series):
     lines.append(f"{titre_array} = [|{str(list_series[0])[1:-1]},")
     for row in list_series[1:-1]:
         lines.append(f"|{str(row)[1:-1]},")
-    lines.append(f"|{str(list_series[0])[1:-1]}|];")
+    lines.append(f"|{str(list_series[len(list_series) - 1])[1:-1]}|];")
     return lines
 
 
@@ -53,7 +62,7 @@ def format_dzn(recipes):
     lines.append("")
     lines = add_dzn_2darray_to_lines(lines, "ingredients", ingredients_list_series)
     lines.append("")
-    lines = add_dzn_1darray_to_lines(lines, "qtes_disponibles", [0] * len(noms_ingredients))
+    lines = add_dzn_1darray_to_lines(lines, "qtes_disponibles", qtes_disponibles(noms_ingredients))
     lines.append("")
     lines = add_dzn_1darray_to_lines(lines, "peremptions", [0] * len(noms_ingredients))
     lines.append("")
@@ -90,6 +99,6 @@ def write_lines(lines, out_path):
 
 
 if __name__ == "__main__":
-    recipes = pd.read_pickle(processed_recipes_path).sample(10)
+    recipes = pd.read_pickle(processed_recipes_path).sample(nrows).reset_index(drop=True)
     lines = format_dzn(recipes)
     write_lines(lines, dzn_out_path)
