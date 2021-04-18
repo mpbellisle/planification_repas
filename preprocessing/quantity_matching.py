@@ -1,6 +1,6 @@
 import re
 
-MEASURE_MAPPING = {"cup": 250, "tablespoon": 15, "teaspoon": 5, "pinch": 1}
+from preprocessing.constant import MEASURE_MAPPING
 
 
 def regex_match_pattern(measure):
@@ -16,7 +16,7 @@ def return_dict_ing_qte(quantites_list, ingredients_list):
             for qte_string in qte_list:
                 if ":" in qte_string:
                     next
-                if re.search(ing, qte_string):
+                if re.search(f"(^| ){ing}( |$)", qte_string):
                     qte += return_ml_from_string(qte_string)
             if qte == 0:
                 for qte_string in qte_list:

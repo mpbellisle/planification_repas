@@ -5,6 +5,7 @@ import pandas as pd
 import numpy as np
 
 from preprocessing.quantity_matching import return_dict_ing_qte
+from preprocessing.constant import ING_TO_REMOVE
 
 MIN_INGREDIENTS_OCCURENCES = 10
 
@@ -31,9 +32,10 @@ def open_weird_csv(filename):
 
 
 def return_keep_index_regex(data):
+    to_remove_ing_regex = "|".join(ING_TO_REMOVE)
     to_keep_index = []
     for i, row in data.iterrows():
-        keep = not re.search("[0-9]|:|'|to taste|\(", row["Ingredients"])
+        keep = not re.search(f"[0-9]|:|'|to taste|\(|{to_remove_ing_regex}", row["Ingredients"])
         to_keep_index.append(keep)
     return to_keep_index
 
