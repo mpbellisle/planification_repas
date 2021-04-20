@@ -1,5 +1,6 @@
 import pandas as pd
 from time import sleep
+from tqdm import tqdm
 from urllib.request import urlopen, Request
 
 from preprocessing.constant import NATIONALITES
@@ -28,7 +29,8 @@ def trouver_categories(question, plat, categories, nb_pages=1, seuil_proportion=
 
 
 def trouver_categories_sur_series(question, series, categories, nb_pages=1, seuil_proportion=None):
-    return series.apply(lambda x: trouver_categories(question, x, categories, nb_pages, seuil_proportion))
+    tqdm.pandas()
+    return series.progress_apply(lambda x: trouver_categories(question, x, categories, nb_pages, seuil_proportion))
 
 
 def trouver_moment_sur_series(series):
