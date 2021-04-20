@@ -11,8 +11,9 @@ USER_AGENT = "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 F
 def trouver_categories(question, plat, categories, nb_pages=1, seuil_proportion=None):
     seuil_proportion = 1 / len(categories) if seuil_proportion is None else seuil_proportion
     question_clean = question.replace(" ", "+")
-    plat_clean = plat.lower().replace(" i ", " ").replace(" ", "-").replace("recipe", "")
-    URLS = [f"https://www.bing.com/search?q={question_clean}+{plat_clean}&first={i * 10}" for i in range(nb_pages)]
+    plat_clean = plat.lower().replace(" ", "+").replace(" recipe", "")
+    # URLS = [f"https://www.bing.com/search?q={question_clean}+{plat_clean}&first={i * 10}" for i in range(nb_pages)]
+    URLS = [f"https://www.google.ca/search?q={question_clean}+{plat_clean}&start={i * 10}" for i in range(nb_pages)]
     contenu = str()
     for URL in URLS:
         try:

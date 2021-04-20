@@ -4,11 +4,13 @@ from preprocessing.categories_scraper import trouver_moment_sur_series, trouver_
 
 recipes_path = "data/recipes.csv"
 clean_recipes_path = "data/clean_recipes.csv"
-nrows = 200
+nrows = 500
 out_path = f"data/recipes_out_{nrows if nrows else 'full'}.pkl"
 
 if __name__ == "__main__":
-    recipes = get_merge_df(clean_recipes_path, recipes_path).sample(nrows)
+    recipes = get_merge_df(clean_recipes_path, recipes_path)
+    if nrows:
+        recipes = recipes.sample(nrows).reset_index(drop=True)
     print("merged")
     recipes["nationalites"] = trouver_nationalite_sur_series(recipes["Recipe Name"])
     print(recipes["nationalites"])
