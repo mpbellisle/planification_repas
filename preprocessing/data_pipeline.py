@@ -4,7 +4,7 @@ from preprocessing.categories_scraper import trouver_moment_sur_series, trouver_
 
 recipes_path = "data/recipes.csv"
 clean_recipes_path = "data/clean_recipes.csv"
-nrows = 2000
+nrows = 5000
 out_path = f"data/recipes_out_{nrows if nrows else 'full'}.pkl"
 
 if __name__ == "__main__":

@@ -42,6 +42,18 @@ constraint forall(i in recette) (sum([horaire[j] == i |j in repas]) <= nb_max_ut
 % Planifier plus tôt que tard
 constraint forall(i in 1..nb_repas-3) ((horaire[i] == 0 /\ horaire[i+3] == 0) \/ horaire[i] != 0);
 
+% Céduler les recettes en ordre de péremptions pour briser des symmétries
+array[recette] of var int: peremptions_recettes;
+constraint forall (i in recette)
+(
+  let {
+  array[ingredient] of var int: peremptions_recettes_ingredients;
+  } in
+  forall(j in ingredient) ((peremptions_recettes_ingredients[j] == if ingredients[i, j] == 1 then peremptions[j] else 10000 endif) /\
+  peremptions_recettes[i] = min(peremptions_recettes_ingredients))
+);
+constraint forall(i in 1..nb_repas-3) (if horaire[i] > 0  then peremptions_recettes[horaire[i]] <= peremptions_recettes[horaire[i+3]] endif);
+
 % On cherche à minimiser le nombre de 0
 var 0..nb_repas: nb_zeros;
 nb_zeros = sum([horaire[i] == 0| i in repas]);
