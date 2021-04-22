@@ -2,7 +2,7 @@ import pandas as pd
 
 from preprocessing.constant import NATIONALITES, ING_TO_REMOVE, BASE_ING_QTE_MAPPING, AVAILABLE_ING
 
-nrows = 500
+nrows = 2000
 processed_recipes_path = "data/recipes_out_500.pkl"
 dzn_out_path = f"data/data_recettes_out_{nrows if nrows else 'full'}.dzn"
 

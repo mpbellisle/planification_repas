@@ -1,4 +1,4 @@
-include "../data/data_recettes_out_full.dzn";
+include "../data/data_recettes_out_2000.dzn";
 include "../data/parametres.dzn";
 include "alldifferent.mzn";
 

@@ -43,6 +43,11 @@ def trouver_nationalite_sur_series(series):
 
 
 if __name__ == "__main__":
-    test = pd.Series(["pizza", "spaghetti", "tacos", "lasagna", "cereal", "hot dog"])
-    print(trouver_moment_sur_series(test))
-    print(trouver_nationalite_sur_series(test))
+    noms = pd.Series(["tacos", "beef bourguignon", "hamburger", "eggs benedict"])
+    moments = trouver_moment_sur_series(noms)
+    nationalites = trouver_nationalite_sur_series(noms)
+    for (nom, moment, nationalite) in zip(noms, moments, nationalites):
+        print(nom)
+        print(moment)
+        print(nationalite)
+
