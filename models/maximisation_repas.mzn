@@ -27,6 +27,7 @@ array[nationalite] of float: preferences_nationalites;
 % Préparation de la liste de sortie
 array[repas] of var 0..nb_recettes: horaire;
 
+% changer les 3 pour nb_moments
 % On choisi des recettes correspondantes au moment de la journée
 constraint forall (i in repas) (moments[horaire[i], (i-1) mod 3 + 1] == 1 \/ horaire[i] == 0);
 
@@ -34,7 +35,7 @@ constraint forall (i in repas) (moments[horaire[i], (i-1) mod 3 + 1] == 1 \/ hor
 constraint forall(i in ingredient) (sum([if horaire[j] > 0 then ingredients[horaire[j], i] else 0 endif| j in repas]) <= qtes_disponibles[i]);
 
 % On respecte les péremptions d'ingrédients
-constraint forall(i in ingredient, j in repas) (if horaire[j] > 0 then if ingredients[horaire[j], i] > 0 then j <= peremptions[i] else true endif else true endif);
+constraint forall(i in ingredient, j in repas) (if horaire[j] > 0 then if ingredients[horaire[j], i] > 0 then j div 3 <= peremptions[i] else true endif else true endif);
 
 % Toutes les recettes sont différentes
 constraint forall(i in recette) (sum([horaire[j] == i |j in repas]) <= nb_max_utilisation_recette);
@@ -52,7 +53,7 @@ constraint forall (i in recette)
   forall(j in ingredient) ((peremptions_recettes_ingredients[j] == if ingredients[i, j] == 1 then peremptions[j] else 10000 endif) /\
   peremptions_recettes[i] = min(peremptions_recettes_ingredients))
 );
-constraint forall(i in 1..nb_repas-3) (if horaire[i] > 0  then peremptions_recettes[horaire[i]] <= peremptions_recettes[horaire[i+3]] endif);
+constraint forall(i in 1..nb_repas-3) (if horaire[i] > 0 /\ horaire[i+3] > 0 then peremptions_recettes[horaire[i]] <= peremptions_recettes[horaire[i+3]] endif);
 
 % On cherche à minimiser le nombre de 0
 var 0..nb_repas: nb_zeros;
@@ -66,4 +67,3 @@ var float: score;
 score = -nb_zeros + respect_preferences_nationalites;
 
 solve maximize score;
-
