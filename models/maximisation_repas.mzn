@@ -35,13 +35,13 @@ constraint forall (i in repas) (moments[horaire[i], (i-1) mod 3 + 1] == 1 \/ hor
 constraint forall(i in ingredient) (sum([if horaire[j] > 0 then ingredients[horaire[j], i] else 0 endif| j in repas]) <= qtes_disponibles[i]);
 
 % On respecte les péremptions d'ingrédients
-constraint forall(i in ingredient, j in repas) (if horaire[j] > 0 then if ingredients[horaire[j], i] > 0 then j div 3 <= peremptions[i] else true endif else true endif);
+constraint forall(i in ingredient, j in repas) (if horaire[j] > 0 then if ingredients[horaire[j], i] > 0 then j div nb_moments <= peremptions[i] else true endif else true endif);
 
 % Toutes les recettes sont différentes
 constraint forall(i in recette) (sum([horaire[j] == i |j in repas]) <= nb_max_utilisation_recette);
 
 % Planifier plus tôt que tard
-constraint forall(i in 1..nb_repas-3) ((horaire[i] == 0 /\ horaire[i+3] == 0) \/ horaire[i] != 0);
+constraint forall(i in 1..nb_repas-nb_moments) ((horaire[i] == 0 /\ horaire[i+3] == 0) \/ horaire[i] != 0);
 
 % Céduler les recettes en ordre de péremptions pour briser des symmétries
 array[recette] of var int: peremptions_recettes;
