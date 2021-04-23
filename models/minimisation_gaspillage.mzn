@@ -60,8 +60,6 @@ constraint forall(i in recette) (score_recette_peremptions[i] == sum([100*ingred
 
 % Et à maximiser l'utilisation des ingrédients périssables
 var int: score_peremptions;
-%ing_utilise = sum([if horaire[i] > 0 then if peremptions[j] div 5 <= nb_jours then ingredients[horaire[i], j] else 0 endif else 0 endif| i in repas, j in ingredient]);
-%score_peremptions = sum([score_recette_peremptions[horaire[i]]| i in repas]);
 
 score_peremptions = sum([if horaire[i] > 0 then score_recette_peremptions[horaire[i]] else 0 endif| i in repas]);
 %solve satisfy;
