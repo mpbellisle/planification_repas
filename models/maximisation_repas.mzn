@@ -22,7 +22,7 @@ array[recette, moment] of int: moments;
 array[recette, nationalite] of int: nationalites;
 array[ingredient] of int: qtes_disponibles;
 array[ingredient] of int: peremptions;
-array[nationalite] of float: preferences_nationalites;
+array[nationalite] of int: preferences_nationalites;
 
 % Préparation de la liste de sortie
 array[repas] of var 0..nb_recettes: horaire;
@@ -60,10 +60,10 @@ var 0..nb_repas: nb_zeros;
 nb_zeros = sum([horaire[i] == 0| i in repas]);
 
 % Et à maximiser les préférences de nationalités
-var float: respect_preferences_nationalites;
+var int: respect_preferences_nationalites;
 respect_preferences_nationalites = sum([if horaire[i] > 0 then if nationalites[horaire[i], j] == 1 then preferences_nationalites[j] else 0 endif else 0 endif | i in repas, j in nationalite]);
 
-var float: score;
-score = -nb_zeros + respect_preferences_nationalites;
+var int: score;
+score = -nb_zeros * 10 + respect_preferences_nationalites;
 
 solve maximize score;
