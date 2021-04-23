@@ -53,7 +53,7 @@ constraint forall (i in recette)
   forall(j in ingredient) ((peremptions_recettes_ingredients[j] == if ingredients[i, j] == 1 then peremptions[j] else 10000 endif) /\
   peremptions_recettes[i] = min(peremptions_recettes_ingredients))
 );
-constraint forall(i in 1..nb_repas-3) (if horaire[i] > 0 /\ horaire[i+3] > 0 then peremptions_recettes[horaire[i]] <= peremptions_recettes[horaire[i+3]] endif);
+constraint forall(i in 1..nb_repas-3) (if horaire[i] > 0 /\ horaire[i+3] > 0 then peremptions_recettes[horaire[i]] <= peremptions_recettes[horaire[i+nb_moments]] endif);
 
 % On cherche à minimiser le nombre de 0
 var 0..nb_repas: nb_zeros;
